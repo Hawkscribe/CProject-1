@@ -1,10 +1,10 @@
 import express from 'express';
 import { protectRoute } from '../middleware/protectRoute.js';
-import { createPost } from '../controllers/post.controller.js';
+import { createPost,deletePost,commentOnPost,likeunlikePost } from '../controllers/post.controller.js';
 const router=express.Router();
 router.post("/create",protectRoute,createPost);
-// router.post("/like/:id",protectRoute,likeunlikePost);
-// router.post("/comment",protectRoute,commentOnPost);
-// router.delete("/",protectRoute,deletePost);
+router.post("/like/:id",protectRoute,likeunlikePost);
+router.post("/comment/:id",protectRoute,commentOnPost);
+router.delete("/:id",protectRoute,deletePost);
 
 export default router;
