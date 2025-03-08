@@ -88,11 +88,14 @@ export const likeunlikePost = async (req, res) => {
       if (userLikedPost) {
         // Unlike the post
         post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
-        await post.save();
+        await User.updateOne({_id:userId},{$pull:{likedPosts:postId}});
         return res.status(200).json({ msg: "Post unliked successfully" });
-      } else {
+        await post.save();
+
+    } else {
         // Like the post
         post.likes.push(userId);
+        await User.updateOne({_id:userId},{$pull:{likedPosts:postId}});
         await post.save();
   
         // Ensure the post has a valid user before sending a notification
@@ -113,3 +116,44 @@ export const likeunlikePost = async (req, res) => {
     }
   };
   
+  export const getAllPost= async(req,res)=>{
+    try {
+        const posts=await Post.find().sort({createdAt:-1}).populate({
+            path:"user",
+            select:"-password",
+        })
+        .populate({
+       path:"comments.user",
+       select:"-password",
+        })
+        if (posts.length===0) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log("Error in the getAllPost controller:");
+        res.status(500).json({error:"INtenal server error "});
+    }
+  }
+
+  export const getLikedPost=async (req,res)=>{
+    const userId=req.params.id;
+    try {
+        const user=await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({msg:"User not found"});
+        }
+        const likedPosts=await Post.find({_id:{$in:user.likedPosts}})
+        .populate({
+            path:"user",
+            select:"-password"
+        }).populate({
+            path:"comments.user",
+            select:"-password"
+        });
+        res.status(200).json(likedPosts);
+    } catch (error) {
+        console.log("There is an error in the post controller route ");
+        return res.status(500).json({msg:"INtetrnal server error in geeting the liked posts"});
+    }
+  }
