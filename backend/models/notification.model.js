@@ -4,23 +4,23 @@ const notificationSchema = new mongoose.Schema({
     from: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,  // Fixed typo: 'required' instead of 'reuired'
+        required: true,  
     },
     to: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,  // Fixed typo: 'required' instead of 'reuired'
+        required: true,  
     },
     type: {
         type: String,
         required: true,
-        enum: ['follow', 'like'],  // Fixed typo: 'enums' should be 'enum'
+        enum: ['follow', 'like'],  
     },
     read: {
         type: Boolean,
         default: false,
     }
-}, { timestamps: true });  // Fixed typo: 'timestamp' should be 'timestamps'
+}, { timestamps: true });  
 
 const Notification = mongoose.model('Notification', notificationSchema);  // Fixed typo in model name
 

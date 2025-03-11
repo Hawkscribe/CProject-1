@@ -157,3 +157,51 @@ export const likeunlikePost = async (req, res) => {
         return res.status(500).json({msg:"INtetrnal server error in geeting the liked posts"});
     }
   }
+
+  export const getFollowingPost=async (req,res)=>{
+    try {
+        const userId=req.user._id;
+        const user=await User.findById(userId);
+        if (!user) {
+            return res.status(400).json({msg:"user not found"});
+        }
+        const following=user.following;
+        const feedPosts=await Post.find({user:{$in:following}})
+        .sort({createdAt:-1})
+        .populate({
+            path:"user",
+            select:"-password",
+        }).populate({
+            path:"comments.user",
+            select:"-password",
+        });
+        res.status(200).json(feedPosts);
+    } catch (error) {
+        console.log("Err in the feeds of the post");
+        return res.status(400).json({msg:"EWrror in the post controller"});
+
+        
+    }
+  }
+
+  export const getUserPosts=async (req,res)=>{
+    try {
+        const {username}=req.params;
+        const user=await User.findOne({username});
+        if (!user) {
+            return res.status(400).json({msg:"The user iis not found"});
+        }
+        const posts=await Post.find({user:user._id}).sort({createdAt:-1}).populate({
+            path:"user",
+            select:"-password",
+        }).populate({
+            path:"comments.user",
+            select:"-password",
+        });
+
+        res.status(200).json(posts);
+    } catch (error) {
+                  console.log("Err in the postcontroller");
+                  return res.status(400).json({msg:"Not able to fetch the posts of the user"});
+    }
+  }
