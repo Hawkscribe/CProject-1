@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const connectMongoDB=async ()=>{
     try {
-        const conn=await mongoose.connect(process.env.MONGO_URI);
+        const conn = await mongoose.connect("mongodb+srv://database1:123456789pwd@cluster0.bhtab.mongodb.net/twitterdb");
+
          console.log("Mongo is connected");
 
     } catch (error) {

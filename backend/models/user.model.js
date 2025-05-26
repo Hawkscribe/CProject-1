@@ -10,14 +10,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    eMail: {
+    email: {  // ✅ Changed from eMail to email
         type: String,
         required: true,
+        unique: true, // ✅ Added to avoid duplicate emails
     },
     password: {
         type: String,
         required: true,
-        unique: true
     },
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -45,12 +45,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    likedPosts:[{
-      type:mongoose.Schema.Types.ObjectId,
-        ref:"Post",
-        default:[]
-    } 
-],
+    likedPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+        default: []
+    }],
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
