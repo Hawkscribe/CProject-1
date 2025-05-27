@@ -14,7 +14,7 @@ cloudinary.config({
     api_key:process.env.CLODINARY_API_KEY,
     api_secret:process.env.CLODINARY_API_SECRET,
 })
-app.use(express.json());
+app.use(express.json({limit:"100mb"}));//To prevent the DOS attack --->Denial of servise attack
 // console.log(process.env.MONGO_URI);
 app.use(express.urlencoded({extended:true}));//to parse form data 
 app.use(cookieParser());
